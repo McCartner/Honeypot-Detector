@@ -1,0 +1,10 @@
+body {
+	background: #0a0a0a!important;
+	color: #fff!important;
+	padding: 15%!important;
+  text-align: center;
+}
+
+input#address{
+	max-width: 350px;
+}

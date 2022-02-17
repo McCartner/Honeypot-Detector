@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+        <title>Honeypot Detector</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+		<script
+		  src="https://code.jquery.com/jquery-3.1.1.min.js"
+		  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+		  crossorigin="anonymous"></script>
+	</head>
+
+<body>
+<div class="ui center aligned container">
+
+<h1 class="ui header" style="color: #fff;">Honeypot Detector for Ethereum Network.</h1>
+<p>----------------------------------------------------------------------------------------------------------------</p>
+
+<script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+
+<div style="" class="ui center aligned" id="shitcoin"></div>
+
+<div class="ui form">
+<form action="" method="GET">
+	<div class="field">
+		<label style="color: #fff; margin-top: 20px;">Token Address</label>
+		<input class="field" type="text" id="address" name="address" value="" width="128">
+	</div>
+	<br>
+	<div>
+		<input class="ui submit button" type="submit" value="Is it honeypot?">
+	</div>
+</form>
+</div>
+
+</body>
+
+<script>
+let web3 = null;
+let tokenName = '';
+let tokenSymbol = '';
+let tokenDecimals = 0;
+let maxSell = 0;
+let maxTXAmount = 0;
+let ethIN = 1000000000000000000;
+let maxTxETH = null;
+
+let bbCode = '0x6080604052600436106100645760003560e01c8063098d32281461017157806362d9a85c1461019a5780638da5cb5b146101cb5780638f0eb6b1146101f35780639eded3f814610213578063d66383cb14610233578063f2fde38b14610273576100ba565b366100ba57600054600160a01b900460ff166100b85760405162461bcd60e51b815260206004820152600e60248201526d7768792073656e6420626e62733f60901b60448201526064015b60405180910390fd5b005b6000546001600160a01b031633146100e45760405162461bcd60e51b81526004016100af90610c12565b600154600160a01b900460ff166101385760405162461bcd60e51b8152602060048201526018602482015277776861742061726520796f75206576656e20646f696e673f60401b60448201526064016100af565b6001546040516001600160a01b039091169036600082376000803683855af43d82016040523d6000833e80801561016d573d83f35b3d83fd5b34801561017d57600080fd5b5061018760001981565b6040519081526020015b60405180910390f35b3480156101a657600080fd5b506001546101bb90600160a01b900460ff1681565b6040519015158152602001610191565b3480156101d757600080fd5b506000546040516001600160a01b039091168152602001610191565b3480156101ff57600080fd5b506100b861020e366004610a40565b610293565b34801561021f57600080fd5b506100b861022e366004610b46565b6102e6565b610246610241366004610a40565b61032e565b604080519687526020870195909552938501929092526060840152608083015260a082015260c001610191565b34801561027f57600080fd5b506100b861028e366004610a40565b610397565b6000546001600160a01b031633146102bd5760405162461bcd60e51b81526004016100af90610c12565b600180546001600160a01b039092166001600160a81b031990921691909117600160a01b179055565b6000546001600160a01b031633146103105760405162461bcd60e51b81526004016100af90610c12565b60008054911515600160a81b0260ff60a81b19909216919091179055565b60008080808080737a250d5630b4cf539739df2c5dacb4c659f2488d818080610358848c34610421565b919450925090506103698b836106c0565b6000806000610379878f876107ed565b979e50959c509a509398509196509294505050505091939550919395565b6000546001600160a01b031633146103c15760405162461bcd60e51b81526004016100af90610c12565b6001600160a01b0381166103ff5760405162461bcd60e51b81526020600482015260056024820152640cae4e462f60db1b60448201526064016100af565b600080546001600160a01b0319166001600160a01b0392909216919091179055565b604080516002808252606082018352600092839283928392602083019080368337019050509050866001600160a01b031663ad5c46486040518163ffffffff1660e01b815260040160206040518083038186803b15801561048157600080fd5b505afa158015610495573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906104b99190610a64565b816000815181106104cc576104cc610cb3565b60200260200101906001600160a01b031690816001600160a01b031681525050858160018151811061050057610500610cb3565b6001600160a01b03928316602091820292909201015260405163d06ca61f60e01b815260009189169063d06ca61f9061053f9089908690600401610c31565b60006040518083038186803b15801561055757600080fd5b505afa15801561056b573d6000803e3d6000fd5b505050506040513d6000823e601f3d908101601f191682016040526105939190810190610a81565b90506000816001815181106105aa576105aa610cb3565b6020026020010151905060005a9050896001600160a01b031663b6f9de958960008730426040518663ffffffff1660e01b81526004016105ed9493929190610bdd565b6000604051808303818588803b15801561060657600080fd5b505af115801561061a573d6000803e3d6000fd5b505050505060005a61062c9083610c8e565b6040516370a0823160e01b81523060048201529091508a906000906001600160a01b038316906370a082319060240160206040518083038186803b15801561067357600080fd5b505afa158015610687573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906106ab9190610b80565b949d949c50919a509298505050505050505050565b60405163095ea7b360e01b8152737a250d5630b4cf539739df2c5dacb4c659f2488d6004820152600019602482015282906001600160a01b0382169063095ea7b390604401602060405180830381600087803b15801561071f57600080fd5b505af192505050801561074f575060408051601f3d908101601f1916820190925261074c91810190610b63565b60015b6107e75760405163095ea7b360e01b8152737a250d5630b4cf539739df2c5dacb4c659f2488d6004820152602481018390526001600160a01b0382169063095ea7b390604401602060405180830381600087803b1580156107af57600080fd5b505af11580156107c3573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906107e79190610b63565b50505050565b604080516002808252606082018352600092839283928392602083019080368337019050509050858160008151811061082857610828610cb3565b60200260200101906001600160a01b031690816001600160a01b031681525050866001600160a01b031663ad5c46486040518163ffffffff1660e01b815260040160206040518083038186803b15801561088157600080fd5b505afa158015610895573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906108b99190610a64565b816001815181106108cc576108cc610cb3565b6001600160a01b03928316602091820292909201015260405163d06ca61f60e01b815260009189169063d06ca61f9061090b9089908690600401610c31565b60006040518083038186803b15801561092357600080fd5b505afa158015610937573d6000803e3d6000fd5b505050506040513d6000823e601f3d908101601f1916820160405261095f9190810190610a81565b905060008160018151811061097657610976610cb3565b60209081029190910101516000805460ff60a01b1916600160a01b17815590915047905a60405163791ac94760e01b81529091506001600160a01b038c169063791ac947906109d2908c906000908a9030904290600401610c52565b600060405180830381600087803b1580156109ec57600080fd5b505af1158015610a00573d6000803e3d6000fd5b5050505060005a610a119083610c8e565b6000805460ff60a01b19168155909150610a2b8447610c8e565b949d949c50909a509298505050505050505050565b600060208284031215610a5257600080fd5b8135610a5d81610cdf565b9392505050565b600060208284031215610a7657600080fd5b8151610a5d81610cdf565b60006020808385031215610a9457600080fd5b825167ffffffffffffffff80821115610aac57600080fd5b818501915085601f830112610ac057600080fd5b815181811115610ad257610ad2610cc9565b8060051b604051601f19603f83011681018181108582111715610af757610af7610cc9565b604052828152858101935084860182860187018a1015610b1657600080fd5b600095505b83861015610b39578051855260019590950194938601938601610b1b565b5098975050505050505050565b600060208284031215610b5857600080fd5b8135610a5d81610cf7565b600060208284031215610b7557600080fd5b8151610a5d81610cf7565b600060208284031215610b9257600080fd5b5051919050565b600081518084526020808501945080840160005b83811015610bd25781516001600160a01b031687529582019590820190600101610bad565b509495945050505050565b848152608060208201526000610bf66080830186610b99565b6001600160a01b03949094166040830152506060015292915050565b6020808252600590820152640cae4e460f60db1b604082015260600190565b828152604060208201526000610c4a6040830184610b99565b949350505050565b85815284602082015260a060408201526000610c7160a0830186610b99565b6001600160a01b0394909416606083015250608001529392505050565b600082821015610cae57634e487b7160e01b600052601160045260246000fd5b500390565b634e487b7160e01b600052603260045260246000fd5b634e487b7160e01b600052604160045260246000fd5b6001600160a01b0381168114610cf457600080fd5b50565b8015158114610cf457600080fdfea264697066735822122055a2cf41241dc699f20971bece1cef6267ea3394de09413d5f978e96037f34a364736f6c63430008060033';
+
+const urlParams = new URLSearchParams(window.location.search);
+let address = urlParams.get('address');
+if(address.length < 1) {
+    pathname = window.location.pathname;
+    if(pathname.startsWith('/token/')) {
+        let tokenAddress = pathname.split('/')[pathname.length - 1];
+        address = tokenAddress;
+    }
+}
+const screenWidth = screen.width;
+let addressToOutput = address;
+
+if(screenWidth < 768) {
+    addressToOutput = address.substring(0,6) + "..." + address.substring(address.length - 4);
+}
+
+web3 = new Web3('https://cloudflare-eth.com/');
+run(address);
+
+
+function encodeBasicFunction(web3, funcName) {
+    return web3.eth.abi.encodeFunctionCall({
+        name: funcName,
+        type: 'function',
+        inputs: []
+    }, []);
+}
+
+async function updateTokenInformation(web3, tokenAddress) {
+    web3.eth.call({
+        to: tokenAddress,
+        value: 0,
+        gas: 150000,
+        data: encodeBasicFunction(web3, 'name'),
+    })
+    .then(value => {
+        tokenName = web3.eth.abi.decodeParameter('string', value);
+        let x = document.getElementById('token-info');
+        if(x != null) {
+            x.innerText = tokenName + ' ('+tokenSymbol+')';
+        }
+    });
+
+    web3.eth.call({
+        to: tokenAddress,
+        value: 0,
+        gas: 150000,
+        data: encodeBasicFunction(web3, 'symbol'),
+    })
+    .then(value => {
+        tokenSymbol = web3.eth.abi.decodeParameter('string', value);
+        let x = document.getElementById('token-info');
+        if(x != null) {
+            x.innerText = tokenName + ' ('+tokenSymbol+')';
+        }
+    });
+}
+
+async function run(address) {
+    x = updateTokenInformation(web3, address);
+    await getMaxes();
+    if(maxTXAmount != 0 || maxSell != 0) {
+        await getDecimals(address);
+        await getETHIn(address);
+    }
+    await honeypotIs(address);
+    await x;
+}
+
+async function getDecimals(address) {
+    let sig = encodeBasicFunction(web3, 'decimals');
+    d = {
+        to: address,
+        from: '0x8894e0a0c962cb723c1976a4421c95949be2d4e3',
+        value: 0,
+        gas: 15000000,
+        data: sig,
+    };
+    try {
+        let val = await web3.eth.call(d);
+        tokenDecimals = web3.utils.hexToNumber(val);
+    }catch (e) {
+        console.log('decimals', e);
+    }
+}
+
+async function getETHIn(address) {
+    let amountIn = maxTXAmount;
+    if(maxSell != 0) {
+        amountIn = maxSell;
+    }
+    let WETH = '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2';
+    let path = [address, WETH];
+    let sig = web3.eth.abi.encodeFunctionCall({
+        name: 'getAmountsOut',
+        type: 'function',
+        inputs: [
+            {type: 'uint256', name: 'amountIn'},
+            {type: 'address[]', name: 'path'},
+        ],
+        outputs: [
+            {type: 'uint256[]', name: 'amounts'},
+        ],
+    }, [amountIn, path]);
+
+    d = {
+        to: '0x7a250d5630b4cf539739df2c5dacb4c659f2488d',
+        from: '0x8894e0a0c962cb723c1976a4421c95949be2d4e3',
+        value: 0,
+        gas: 15000000,
+        data: sig,
+    };
+    try {
+        let val = await web3.eth.call(d);
+        let decoded = web3.eth.abi.decodeParameter('uint256[]', val);
+        ethIN = web3.utils.toBN(decoded[1]);
+        maxTxETH = ethIN;
+    } catch (e) {
+        console.log(e);
+    }
+    console.log(ethIN, amountIn);
+}
+
+async function getMaxes() {
+    let sig = web3.eth.abi.encodeFunctionSignature({name: '_maxTxAmount', type: 'function', inputs: []});
+    d = {
+        to: address,
+        from: '0x8894e0a0c962cb723c1976a4421c95949be2d4e3',
+        value: 0,
+        gas: 15000000,
+        data: sig,
+    };
+    try {
+        let val = await web3.eth.call(d);
+        maxTXAmount = web3.utils.toBN(val);
+        console.log(val, maxTXAmount);
+    } catch (e) {
+        console.log('_maxTxAmount: ', e);
+        // I will nest as much as I want. screw javascript.
+        sig = web3.eth.abi.encodeFunctionSignature({name: 'maxSellTransactionAmount', type: 'function', inputs: []});
+        d = {
+            to: address,
+            from: '0x8894e0a0c962cb723c1976a4421c95949be2d4e3',
+            value: 0,
+            gas: 15000000,
+            data: sig,
+        };
+        try {
+            let val2 = await web3.eth.call(d);
+            maxSell = web3.utils.toBN(val2);
+            console.log(val2, maxSell);
+        } catch (e) {
+
+        }
+    }
+}
+
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+async function honeypotIs(address) {
+    let encodedAddress = web3.eth.abi.encodeParameter('address', address);
+    let contractFuncData = '0xd66383cb';
+    let callData = contractFuncData+encodedAddress.substring(2);
+
+    let blacklisted = {
+        '0xa914f69aef900beb60ae57679c5d4bc316a2536a': 'SPAMMING SCAM',
+        '0x105e62565a31c269439b29371df4588bf169cef5': 'SCAM',
+        '0xbbd1d56b4ccab9302aecc3d9b18c0c1799fe7525': 'Error: TRANSACTION_FROM_FAILED'
+    };
+    let unableToCheck = {
+        '0x54810d2e8d3a551c8a87390c4c18bb739c5b2063': 'Coin does not utilise UniSwap',
+        '0xbf4996e7086a96ca07c7595f2f32654019f66f41': 'Coin does not utilise UniSwap',
+    };
+
+    if(blacklisted[address.toLowerCase()] !== undefined) {
+        let reason = blacklisted[address.toLowerCase()];
+        document.getElementById('shitcoin').innerHTML = '<div style="max-width: 100%;" class="ui compact error message"><div class="header"><h3>Yup, honeypot. Run the fuck away.</h3></div><p>Address: ' + addressToOutput + '</p><p id="token-info">'+tokenName + ' ('+tokenSymbol+')'+'</p><br>' + reason + '</div>';
+        return;
+    }
+    if(unableToCheck[address.toLowerCase()] !== undefined) {
+        let rreason = unableToCheck[address.toLowerCase()];
+        document.getElementById('shitcoin').innerHTML = '<div style="max-width: 100%;" class="ui compact info message"><div class="header">Unable to check</div><p>The honeypot checker was unable to determine the result for the specified address.<br>'+rreason+'</p><p>Address: ' + addressToOutput + '</p><p id="token-info">'+tokenName + ' ('+tokenSymbol+')'+'</p><br>' + '' + '</div>';
+        return;
+    }
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'https://aywt3wreda.execute-api.eu-west-1.amazonaws.com/default/IsHoneypot?chain=eth&token='+address, true);
+    xhr.responseType = 'json';
+    xhr.onload = function() {
+        var status = xhr.status;
+        if (status === 200) {
+            if(xhr.response.IsHoneypot == false) {
+                showStats(xhr.response);
+            }else {
+                if(xhr.response.Error == "Error: Returned error: execution reverted") {
+                    showUnable(xhr.response.Error);
+                }
+                showHoneypot(xhr.response);
+            }
+        } else {
+            showUnable('Internal Error');
+        }
+    };
+    xhr.send();
+
+    updateTokenInformation(web3, address);
+}
+
+async function showStats(resp) {
+    let warnings = [];
+
+    if(resp.BuyTax + resp.SellTax >= 80) {
+        warnings.push("<h3>Insanely high tax. Effectively a honeypot.</h3>");
+    }else if(resp.BuyTax + resp.SellTax >= 30) {
+        warnings.push("Be aware of high tax.");
+    }
+    if(resp.SellGas >= 1500000) {
+        warnings.push("Selling the token has high gas cost. Be aware.");
+    }
+
+    let warningmsg = '';
+    let warningMsgExtra = '';
+    let uiType = 'success';
+    let warningsEncountered = false;
+    if(warnings.length > 0) {
+        warningsEncountered = true;
+        uiType = 'warning';
+        warningmsg = '<p><ul>WARNINGS';
+        for(let i = 0; i < warnings.length; i++) {
+            warningmsg += '<li>'+warnings[i]+'</li>';
+        }
+        warningmsg += '</ul></p>';
+    }
+
+    let maxdiv = '';
+    if(maxTXAmount != 0 || maxSell != 0) {
+        console.log('maxes', maxTXAmount.toString(), maxSell);
+        let n = 'Max TX';
+        let x = maxTXAmount;
+        if(maxSell != 0) {
+            n = 'Max Sell';
+            x = maxSell;
+        }
+        let ethWorth = '?'
+        if(maxTxETH != null) {
+            ethWorth = Math.round(maxTxETH / 10**15) / 10**3;
+        }
+        let tokens = Math.round(x / 10**tokenDecimals);
+        maxdiv = '<p>'+n+': ' + tokens + ' ' + tokenSymbol + ' (~'+ethWorth+' ETH)</p>';
+    }
+
+    let gasdiv = '<p>Gas used for Buying: ' + numberWithCommas(resp.BuyGas) + '<br>Gas used for Selling: ' + numberWithCommas(resp.SellGas) + '</p>';
+    document.getElementById('shitcoin').innerHTML = '<div style="max-width: 100%;" class="ui compact '+
+    uiType+
+    ' message"><div class="header"><h3>Does not seem like a honeypot.</h3></div><p>This can always change! Do your own due diligence.</p>'+
+    warningmsg+
+    '<p>Address: ' +
+    addressToOutput +
+    '</p><p id="token-info">'+
+        tokenName +
+        ' ('+tokenSymbol+')'+'</p>'+maxdiv+gasdiv+'<p>Buy Tax: ' + resp.BuyTax + '%<br>Sell Tax: ' + resp.SellTax + '%</p></div>';
+}
+
+async function showHoneypot(resp) {
+    document.getElementById('shitcoin').innerHTML = '<div style="max-width: 100%;" class="ui compact error message"><div class="header"><h3>Yup, honeypot. Run the fuck away.</h3></div><p>Address: ' +
+        addressToOutput +
+        '</p><p id="token-info">'+tokenName +
+        ' ('+tokenSymbol+')'+'</p><br>' + resp.Error + '</div>';
+}
+
+async function showUnable(reason) {
+    document.getElementById('shitcoin').innerHTML = '<div style="max-width: 100%;" class="ui compact info message"><div class="header">Unable to check</div><p>The honeypot checker was unable to determine the result for'+
+        ' the specified address.<br>Possible reasons for this:<ul><li>Invalid address</li><li>Token exists on a different chain</li><li>No liquidity paired with ETH on UniSwap</li></ul>'+
+        '</p><p>Address: ' + addressToOutput + '</p><p id="token-info">'+tokenName + ' ('+tokenSymbol+')'+'</p><br>' + reason + '</div>';
+}
+</script>
+</body>
+</html>
